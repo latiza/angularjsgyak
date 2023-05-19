@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--http://nyelvek.inf.elte.hu/leirasok/JavaScript/index.php?chapter=27
+    Az AngularJS egy Google által fejlesztett, nyílt forráskódú JavaScript keretrendszer dinamikus webes alkalmazásokhoz. 2012. Segítségével nagyban egyszerűsödik a webes alkalmazások frontend fejlesztése.
+    Adjuk hozzá a html-hez az ng-app szöveget.Egy div elementhez is, illetve az egész oldalunkhoz is hozzá adhatjuk az angular alkalmazás rövidítését, ezzel az angularral közöltünk, hogy innentől az egész oldalunk egy angular webes alkalmazásként fog működni.
+Az appunknak adhatunk nevet is: ha hozzá adjuk a nevet, hogy pl. AngularStart, innentől kezdve ez lesz az alkalmazásunk neve. -->
+<html lang="en" ng-app="AngularStart">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--w3s oldaláról másoljuk be a linket : 
+        https://www.w3schools.com/angular/angular_intro.asp-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <!--először az app.jst helyezzük el, és utána a maincontroller.jst, mert hivatkozunk rá, maincontroller.js-ben-->
+    <script src="js/app.js"></script>
+    <script src="js/maincontroller.js"></script>
+<!--későbbiekben szükségünk lesz jQuery könyvtárra is, w3s oldaláról csatolva-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Angular.js alapismeretek</h1>
+    <!--Egy alkalmazáshoz több kontrollert is hozzá adhatunk, de egy területhez
+csak egy kontrollert használhatunk. Itt a div elementhez adunk hozzá egy kontrollert, amit el is nevezünk.
+-->
+    <div ng-controller="MainController">
+        <!--Megadhattuk volna itt is az ng-appot és akkor csak erre a divre lenne érvényes. A h2-es címsorba ki szeretnénk íratni egy szöveget, itt már használhatunk angular.js műveletet használhatunk, pl. szöveges összefűzést, ehhez dubpa kapcsos zárójeleket kell használni, belül pedig már ugyanúgy írjuk az összefűzést, mint a javascriptben.-->
+        <h2>Szia Uram! {{'Ez itt egy ' + 'Angular művelet' + 'végrehajtása lesz.'}}</h2>
+
+        <!--a létrehozott maincontroller.js-ben létre hoztunk egy változót, amelyet alkalmazunk. A bajszok között, a változó nevét adjuk meg, mivel változó név nem kell időzőjelek közé tenni. Mivel a MainControlleren belül hoztam létre ezt a változót, ezért csak ezen a diven belül használhatom.-->
+        <h2>{{szoveg}}</h2>
+        <br>
+        <hr>
+        <h2>Kapcsoljuk össze a változókat szöveges beviteli mezőkkel</h2>
+        <!--ng-model ezzel kapcsolhatjuk össze a változónkat az input mezővel, ha megnézzük a böngészőben az input mezőben megjelenik a változóba eltárolt sztring-->
+        <h3>Szöveg:</h3> 
+        <input type="text" ng-model="szoveg" style="width: 300px;">
+        <!--Most pedig a böngészőben, kezd el átírni a szöveget az input mezőben és figyeld mit történik fölötte real time :-) 
+    
+    következőkben automatikusan generált listát fogunk készíteni, menjünk a maincontroller.js fájlunkhoz-->
+        <h2>Automatikusan generált lista</h2>
+
+        <ul>
+            <!--az ng-repeat az emberek tömbből veszi egyesével az embereket -->
+            <li ng-repeat="ember in emberek">
+                <span><b>{{ember.nev}}</b> ({{ember.eletkor}} éves)</span>
+            </li>
+        </ul>
+        <hr>
+        <!--Az ng-repeatnek vannak beépített változói, katt ide: 
+    https://docs.angularjs.org/api/ng/directive/ngRepeat
+        a $index az ismétlődésnél minden elemnek a sorszáma ami 0-val kezdődik;
+        ehhez elég az előző kódunkat kiegészíteni így:
+-->
+        <h2>Automatikusan generált lista index számokkal bővítve</h2>
+        <ul>
+            <li ng-repeat="ember in emberek">
+                <!--azért, hogy az index ne 0-val kezdődjön adjunk hozzá egyet-->
+                <span>{{$index+1+'. '}}<b> {{ember.nev}}</b> ({{ember.eletkor}} éves)</span>
+            </li>
+        </ul>
+        <hr>
+        <h2>További logikai változók:</h2>
+        <p>$first, $middle, $last, $odd, $even</p>
+        <!--ng-repeat változói:
+    $first: akkor lesz igaz, ha az ismétlések között a legelső, vagyis a legelső elemnél igaz lesz, a többinél pedig hamis;
+    $middle: akkor lesz igaz, ha az elem nem az első, és nem az utolsó;
+    $last: akkor lesz igaz, ha az elem a listában az utolsó
+    $even: páros
+    $odd: páratlan, nem a sorszámra, hanem az indexre vonatkoznak!
+-->
+        <ul>
+            <li ng-repeat="ember in emberek">
+                <span>{{$index+1}} ({{$first}},{{$middle}},{{$last}},{{$odd}},{{$even}}). <b>{{ember.nev}}</b>
+                    ({{ember.eletkor}} éves)</span>
+            </li>
+        </ul>
+        <hr>
+        <h2>Automatikusan generált listában feltétel alkalmazása</h2>
+        <!--következőkben használjuk fel a feltételeket úgy, hogy egyes sorokban vastagítva, második soroban pedig nem vastagítva jelenjenek meg a nevek
+    új paraméterrel ismerkedünk: ng-if amivel egyenlővé tesszük, azt ki fogja értékelni az angular, és ha ez igaz, akkor az adott elemet meghagyja a html dokumentumban. Ha hammis, akkor a teljes elemet ki fogja törölni a dokumentumból nyoma sem lesz.  
+-->
+        <ul>
+            <li ng-repeat="ember in emberek">
+                <span ng-if="$even">{{$index+1}}. <b>{{ember.nev}}</b> ({{ember.eletkor}} éves)</span>
+                <span ng-if="$odd">{{$index+1}}. {{ember.nev}} ({{ember.eletkor}} éves)</span>
+                <!--azért kell kétszer leírni, ha minden nevet látni szeretnénk, mert amelyik feltétel hamis lesz, azt az elemet az angular törli! a dokumentumból! 
+        Nézzük meg a fejlesztőben is az elemeket, hogyan jelennek meg!-->
+            </li>
+        </ul>
+        <hr>
+        <!--A következő lépésben, a lista helyett készítsünk legördülő listát-->
+        <h2>Automatikusan generált legördülő lista</h2><br>
+        <!--Angularban: 
+    ng-model : ez szükséges a legördülő menü működéséhez
+    ng-options 
+ember.nev amit ki szeretnénk íratni, majd végig lépkedünk az emberek objetumon-->
+        <b>Név:</b> <select ng-model="valasztottEmber" ng-options="ember.nev for ember in emberek" onchange="$('#tehat').hide();$('#histruelove').val('');"></select>
+
+        <!--Következőkben készítünk minden ember mellé egy legördülő listát, ahol az adott ember kedvencét tudjuk kiválasztani-->
+
+        &nbsp;&nbsp;
+        <!--ez 2 db szóköz, hogy elválasszuk a legördülő listákat-->
+
+        <b>Ezeket a nőket kedvelték:</b>
+        <select ng-model="valasztottCsaj" onchange="$('#tehat').show()">
+            <!--az iterátrot adjuk meg a bajszok között, a tesztelésnél le kell nyitni a legördülő listát és megjelenik a csajok neve-->
+            <option ng-repeat="csaj in valasztottEmber.csajok">{{csaj}}</option>
+        </select>
+
+        <h3>Feladat tovább bővítése</h3>
+        <b>Szerelme:</b> <input id="histruelove" type="text" ng-model="valasztottCsaj" style="font-size:12pt" />
+        <br>
+        <div id="tehat" style="font-size:14pt; color:darkblue; display: none;">
+            <p>
+            <p></p>Tehát <b>{{valasztottEmber.nev}}</b> szerelme <b>{{valasztottCsaj}}</b> volt.</p>
+        </div>
+    </div>
+    
+    <!--figyeljük meg a működését, ahogy kiválsztjuk bele kerül az eredeti mondatba a szöveg, és ha az input mezőben valamit felül írunk, az is azonnal megjelenik a kék mondatban, viszont az input mezőből eltűnik, mert nincs olyan opció, hogy pl: Bridget már halott.
+    Tehát látható, hogy ez a 3 elem össze van kapcsolva, és ha valamelyik értékét megváltoztatjuk, akkor a másik kettő is hozzá igazodik.
+Ahhpz, hogy üresen ne jelenjen meg, adjuk hozzá a div-hez a display:none-t, majd ahhoz, hogy a változáskkor megjelenjen használjunk jQuery kódot.
+Vegyük fel a 101?-ik sorba: onchange="$('#tehat').show()" ahhoz, hogy ez működjön csatolnunk kell az oldalunkhoz egy jQuery fájlt is.
+
+Bibi ott lesz, ha név váltásnál ott maradna más csaja mert hozzá írtunk valamit, pl Ragnarra akkor ott marad neki Bridget már meghalt, pedig nem is az ő csaja volt, akkor ki kell egészíteni a kódunkat a 95-ik sorban : onchange="$('#tehat').hide();$('#histruelove').val('');"
+Így már tökéletesen fog működni a kódunk.
+-->
+    <hr>
+    <h2>Diven kívüli element:</h2>
+    <p>Itt a div elementen kívül, már nem fog működni: {{szoveg}}</p>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="AngularStart">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--w3s oldaláról másoljuk be a linket : 
+        https://www.w3schools.com/angular/angular_intro.asp-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <!--először az app.jst helyezzük el, és utána a maincontroller.jst, mert hivatkozunk rá, maincontroller.js-ben-->
+        <script src="js/app.js"></script>
+        <script src="js/maincontroller2.js"></script>
+    <!--későbbiekben szükségünk lesz jQuery könyvtárra is, w3s oldaláról csatolva-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+ 
+    <div ng-controller="MainController">
+
+        <h2>Reagálás böngésző-eseményekre</h2><br>
+  
+        <button ng-mouseover="szamlalo = szamlalo + 1" ng-init="szamlalo=0">
+          Hozzáadunk 1-et (ha átmegy rajta az egér)
+        </button>
+        <br><br>
+        számláló: {{szamlalo}}
+  
+        <br><br><hr><br>
+        <a href="https://docs.angularjs.org/api/ng">https://docs.angularjs.org/api/ng</a>
+      
+  
+      </div>
+   
+      
+</body>
+</html>

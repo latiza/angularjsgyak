@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="AngularStart">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--w3s oldaláról másoljuk be a linket : 
+        https://www.w3schools.com/angular/angular_intro.asp-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <!--először az app.jst helyezzük el, és utána a maincontroller.jst, mert hivatkozunk rá, maincontroller.js-ben-->
+        <script src="js/app.js"></script>
+        <script src="js/maincontroller2.js"></script>
+    <!--későbbiekben szükségünk lesz jQuery könyvtárra is, w3s oldaláról csatolva-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+ 
+    <div ng-controller="MainController">
+
+        <h2>Találatok szűrése</h2><br>
+  
+        <b>Keresés:</b> 
+        
+        <input type="text" ng-model="keresoMezo" style="font-size:12pt" />
+  
+        <br><br>
+  
+  <!-- a kereső mezőt a listával a filterrel tudjuk összekötni:
+filter:keresoMezo; megadjuk neki az ng-model-ben megadott nevet és innentől kezdve az angular már tudni fogja, hogy amit a kereső mezőbe írunk, az lesz a szűrő feltétel. Ha elkezdjük beírni, hogy D az összes D betűvel kezdődő nevet mutatja. Ugyanúgy szűrhetünk életkorra és telefonszámra is, de ha több paraméter lenne megadva, azokban is keresne.
+Eddig ilyen keresést ajax-al és php-vel tudtunk csak megoldani, de mostmár az Angularral is meg tudjuk oldani.
+-->
+        <ul>
+          <li ng-repeat="ember in emberek | filter:keresoMezo"><b>{{ember.nev}}</b> ({{ember.eletkor}}) tel.: {{ember.telefon}}</li>
+        </ul>
+
+
+        <hr>
+        <br><br>
+
+<!-- ng-show és ng-hide paraméterek működése
+    
+    Egészítsük ki az objektumot a rokon tulajdonsággal, 1-es legyen az értéke, ha rokon, és 0 ha csak ismerős.
+Két listánk lesz egymás alatt, az egyik a rokonom a másik az ismerösök.
+Az új szűrésben ng-show lesz a paraméter neve, ez azt jelenti, hogy csak azokat fogja mutatni, akiknél a feltétel teljesül. ng-show="ember.rokon==1"
+A másik listában:ng-hide="ember.rokon==1" ezeket fogjuk elrejteni.
+A kereső mező továbbra is szépen működik. Bármilyen betűt beírunk, azokat a neveket fogja kiadni, amelyek tartalmazzák a beírt betűt. -->
+      <h3>Rokonok:</h3>
+      <ul>
+        <li ng-repeat="ember in emberek | filter:keresoMezo" ng-show="ember.rokon==1"><b>{{ember.nev}}</b><br />{{ember.telefon}}<br /><br /></li>
+      </ul>
+
+      <h3>Ismerősök:</h3>
+      <ul>
+        <li ng-repeat="ember in emberek | filter:keresoMezo" ng-hide="ember.rokon==1"><b>{{ember.nev}}</b><br />{{ember.telefon}}<br /><br /></li>
+      </ul>
+    
+      </div>
+  
+      
+</body>
+</html>

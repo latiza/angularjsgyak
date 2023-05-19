@@ -1,0 +1,2 @@
+Egy alkalmazáshoz több kontrollertis hozzá adhatunk, de egy területhez
+csak egy kontrollert használhatunk.
