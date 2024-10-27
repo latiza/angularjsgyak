@@ -1,0 +1,46 @@
+/*Változók használata:
+:root pszeudo osztállyal meghatározzuk a változók körét
+- ebben az esetben a <html> elemet jelöli
+Szintaxisa:
+--változó neve: változó értéke
+használata:
+tulajdonság neve: var(--változó_neve);
+Fontos: öröklődik a gyermek elementekre, és
+érzékeny a kis és nagy betűk használatára
+caniuse.com
+*/
+:root{
+    --background-color:#e6f0f0;
+    --border-repeat: stretch;
+    --border-style: ridge;
+    --border-image-slice:160;
+    /*ez a tulajdonság megadja, hogy kell felszeletelni a border-image-source
+    által meghatározott képet. 
+    a képet 9 részre szeleteli:
+    4 sarok
+    4 él 
+    és középső rész.
+    A középső részt telejesen átlátszóként kezeli
+    */
+    --border-image-width: 3rem;/*szegélykép szélességét adja meg
+    Rem: A rem a "root em" rövid alakja, míg az "em" az elemhez képest számított relatív mértékegység, 
+    a rem a root azaz a gyökér elemhez, vagyis a html taghez számíott relatív méret.
+    */
+}
+
+body{
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+section{
+    border-image-source: url('https://img.freepik.com/free-vector/flat-design-geometric-pattern-background_23-2149923541.jpg?w=740&t=st=1671445602~exp=1671446202~hmac=a9db9edb93b1977404a2304f3e0f6658cb107b42333ddd8e8baa87f94d34bbc5');
+    border-image-slice: var(--border-image-slice);
+    border-image-repeat: var(--border-repeat);
+    border-image-width: var(--border-image-width);
+    border-style: var(--border-style);
+    border-width: 3rem;
+    padding:20px
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--Adjuj hozzá a html-hez az ng-app szöveget.Egy div elementhez is, illetve az egész oldalunkhoz is hozzá adhatjuk az angular alkalmazás rövidítését, ezzel az angularral közöltünk, hogy innentől az egész oldalunk egy angular webes alkalmazásként fog működni.
+Az appunknak adhatunk nevet is: ha hozzá adjuk a nevet, hogy pl. AngularStart, innentől kezdve ez lesz az alkalmazásunk neve. -->
+<html lang="en" ng-app="AngularStart">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/maincontroller.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div ng-controller="MainController">
+    <h1>Ki mit csinált?</h1>
+    <section>
+        <h2>Automatikusan generált legördülő lista</h2><br>
+
+        <b>Név:</b> 
+        <select ng-model="valasztottEmber" ng-options="ember.nev for ember in emberek" onchange="$('#tehat').hide();$('#histruelove').val('');"></select>
+
+        <!--Angularban: 
+    ng-model : ez szükséges a legördülő menü működéséhez
+    ng-options 
+ember.nev amit ki szeretnénk íratni, majd végig lépkedünk az emberek objetumon-->
+ <!--Következőkben készítünk minden ember mellé egy legördülő listát, ahol az adott ember kedvencét tudjuk kiválasztani-->
+
+ &nbsp;&nbsp;
+ <!--ez 2 db szóköz, hogy elválasszuk a legördülő listákat-->
+
+        <b>Ezeket a nőket kedvelték:</b>
+        <select ng-model="valasztottCsaj" onchange="$('#tehat').show()">
+            
+            <option ng-repeat="csaj in valasztottEmber.csajok">{{csaj}}</option>
+        </select>
+
+        <h3>Feladat tovább bővítése</h3>
+        <b>Szerelme:</b> 
+        <input id="histruelove" type="text" ng-model="valasztottCsaj" style="font-size:12pt" />
+        <br>
+        <div id="tehat" style="font-size:14pt; color:darkblue; display: none;">
+            <p>
+            <p></p>Tehát <b>{{valasztottEmber.nev}}</b> szerelme <b>{{valasztottCsaj}}</b> volt.</p>
+        </div>
+    </div>
+    <!--figyeljük meg a működését, ahogy kiválsztjuk bele kerül az eredeti mondatba a szöveg, és ha az input mezőben valamit felül írunk, az is azonnal megjelenik a kék mondatban, viszont az input mezőből eltűnik, mert nincs olyan opció, hogy pl: Bridget már halott.
+    Tehát látható, hogy ez a 3 elem össze van kapcsolva, és ha valamelyik értékét megváltoztatjuk, akkor a másik kettő is hozzá igazodik.
+Ahhpz, hogy üresen ne jelenjen meg, adjuk hozzá a div-hez a display:none-t, majd ahhoz, hogy a változáskkor megjelenjen használjunk jQuery kódot.
+Vegyük fel a 101?-ik sorba: onchange="$('#tehat').show()" ahhoz, hogy ez működjön csatolnunk kell az oldalunkhoz egy jQuery fájlt is.-->
+
+    
+    </section>
+
+</div>
+
+</body>
+</html>
