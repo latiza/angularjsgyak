@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html ng-app="AngularOktato">
+
+  <head>
+    <meta charset="utf-8">
+    <title>AngularJS</title>
+    <script src="js/angular.min.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+    <script src="js/maincontroller.js" type="text/javascript"></script>
+    <script src="js/jquery-1.10.2.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+
+    <div ng-controller="MainController">
+
+      <h2>Űrlapok használata</h2><br>
+
+        <form>
+          <!--amit az input mezőbe beírunk szöveget, azt azonnal meg tudjuk jeleníteni egy másik mezőben.-->
+          Név: <input type="text" ng-model="neved">
+          <br /><br />
+          <!--checkbox megjelenítése, a ng-model az angular által használt változó neve, ha ezt össze szeretnénk kötni a h1-es elem megjelenítésével, akkor a h1-nek meg kell adnunk, hogy ng-show és a változó neve. A checkbox úgy működik, hogy igaz lesz, ha be van pipálva, hamis ha nincs bepipálva.
+          Ha beírunk neven és ki be pipálgatjuk, aszerint fog eltűnni, illetve kirajzolódni a weboldalon.-->
+          Név megjelenítése: <input type="checkbox" ng-model="kiiras">
+        </form>
+
+        <br><br>
+
+        <h1 ng-show="kiiras">A megadott név: {{neved}}</h1>
+        <!--ki is írathatjuk az állapotát
+        alap esetben null értékkel jelenik meg, és pipálás után jelenik meg az true vagy false, de ha szeretnénk alapértelmezett értéket adni, akkor a maincontroller.js-ben a függvényben meg kell adnunk:  $scope.kiiras=true;-->
+        <h1>checkbox: {{kiiras}}</h1>
+    </div>
+  </body>
+</html>
+
