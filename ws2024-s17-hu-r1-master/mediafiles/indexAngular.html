@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="AngularStart">
+<head>
+    <meta charset="UTF-8">
+    <title>Stages</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+</head>
+<body ng-controller="StageController">
+    <ul>
+        <li ng-repeat="stage in stages">
+            {{ $index + 1 + "." }} {{ stage.startingLocation }} -> {{ stage.arrivalLocation }} ({{ stage.distance }} km)
+        </li>
+    </ul>
+    <script>
+        /*live serveren futtasd*/
+    let app = angular.module('AngularStart', []);
+    
+    app.controller('StageController', function($scope, $http) {
+    $scope.stages = [];
+
+    $http.get('stages.json')
+    .then(function(response) {
+        $scope.stages = response.data;
+        console.log(response.data);
+    })
+    .catch(function(error) {
+        console.error('Hiba történt a fájl betöltése közben:', error);
+    });
+});
+    </script>
+</body>
+</html>

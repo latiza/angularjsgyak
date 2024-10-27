@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stages</title>
+</head>
+<body>
+    <ul id="stageList">
+    </ul>
+    <script>
+        // XMLHttpRequest objektum létrehozása
+        var xhr = new XMLHttpRequest();
+        
+        // Fájl betöltése a GET metódus használatával
+        xhr.open('GET', 'stages.json', true);
+        
+        // Adatok feldolgozása, ha a kérés kész
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // JSON válasz feldolgozása
+                var data = JSON.parse(xhr.responseText);
+                var stageList = document.getElementById('stageList');
+
+                // Minden elemet bejárunk és hozzáadjuk az <ul> listához
+                data.forEach(function(stage) {
+                    var li = document.createElement('li');
+                    // Ellenőrizzük, hogy a név üres-e
+                    var displayName = stage.name !== "" ? stage.name : "Állomás";
+                    li.textContent = displayName + ": " + stage.startingLocation + " -> " + stage.arrivalLocation + " (" + stage.distance + " km)";
+                    stageList.appendChild(li);
+                });
+            } else {
+                console.error('Hiba történt a fájl betöltése közben:', xhr.statusText);
+            }
+        };
+        
+        // Hiba kezelése
+        xhr.onerror = function() {
+            console.error('Hiba történt a kérés során.');
+        };
+        
+        // Kérés küldése
+        xhr.send();
+    </script>
+</body>
+</html>

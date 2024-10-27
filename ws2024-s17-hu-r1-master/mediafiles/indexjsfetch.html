@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stages</title>
+</head>
+<body>
+    <ul id="stageList">
+    </ul>
+    <script>
+        // Fetch API-t használunk a JSON adatok lekéréséhez
+        fetch('stages.json')
+            .then(response => response.json()) // JSON válasz feldolgozása
+            .then(data => {
+                const stageList = document.getElementById('stageList');
+
+                // Minden elemet bejárunk és hozzáadjuk az <ul> listához
+                data.forEach(stage => {
+                    const li = document.createElement('li');
+                    // Ellenőrizzük, hogy a név üres-e
+                    const displayName = stage.name !== "" ? stage.name : "Állomás";
+                    li.textContent = `${displayName}: ${stage.startingLocation} -> ${stage.arrivalLocation} (${stage.distance} km)`;
+                    stageList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Hiba történt a fájl betöltése közben:', error);
+            });
+    </script>
+</body>
+</html>

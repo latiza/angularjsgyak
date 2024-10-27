@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="calculatorApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Stage calculator</title>
+</head>
+
+<body ng-controller="calculatorController">
+    <div class="calculator">
+        <h2>Team member table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Line number</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Speed (MM:SS)</th>
+                    <th>Total distance (km)</th>
+                </tr>
+            </thead>
+            <tbody ng-init="updateRunners()">
+                <tr ng-repeat="member in teamMembers">
+                    <td>{{ $index + 1 }}</td>
+                    <td><input type="text" ng-model="member.firstName" ng-change="updateRunners()"></td>
+                    <td><input type="text" ng-model="member.lastName" ng-change="updateRunners()"></td>
+                    <td><input type="time" ng-model="member.speed" ng-change="formatTime(member)" maxlength="4"></td>
+                    <td>{{ runnerDistance[member.firstName + ' ' + member.lastName] || 0 }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Stage Assignment Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Line Number</th>
+                    <th>Distance (km)</th>
+                    <th>Starting Point</th>
+                    <th>Arriving Point</th>
+                    <th>Name</th>
+                    <th>Runner</th>
+                    <th>Runner's speed in ss</th>
+                    <th>Time (HH:MM:SS)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="stage in stages">
+                    <td>{{ $index +1 }}</td>
+                    <td>{{ stage.distance }}</td>
+                    <td>{{ stage.startingLocation }}</td>
+                    <td>{{ stage.arrivalLocation }}</td>
+                    <td>{{ stage.name }}</td>
+                    <td>
+                        <select ng-model="stage.runner" ng-change="calculateTotalDistance(stage.distance, stage.runner)">
+                            <option value="">No runner selected</option>
+                            <option ng-repeat="runner in runners" value="{{ runner }}">{{ runner }}</option>
+                        </select>
+                    </td>
+                    <td>{{ getRunnerSpeed(stage.runner) }}</td>
+                    <td>{{ calculateTime(stage.distance, getRunnerSpeed(stage.runner)) }}</td>
+                </tr>                
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let app = angular.module('calculatorApp', []);
+app.controller('calculatorController', function($scope, $http){
+    $http.get('stages.json')
+    .then(function(response){
+        $scope.stages = response.data;
+        console.log($scope.stages)
+    })
+
+    //megjelenítsük a 10 beviteli mezőt
+    $scope.teamMembers = [];
+    for (let i = 0; i < 10; i++) {
+        $scope.teamMembers.push(
+            {
+                firstName: '',
+                lastName: '',
+                speed: '',
+                totalDistance: 0
+            });  
+    }
+    console.log($scope.teamMembers);
+
+    //Futók kiválasztása egy-egy szakaszra
+    $scope.updateRunners = function(){
+        $scope.runners = [];
+        angular.forEach($scope.teamMembers, function(member){
+            let fullName = member.firstName + ' ' + member.lastName;
+            //ellenőrzés, létezik e a tömbben, ha nem adja hozzá
+            if($scope.runners.indexOf(fullName) === -1){
+                //ha nincs benne adja hozzá az üres tömbhöz
+                $scope.runners.push(fullName)
+            }
+        });
+        console.log($scope.runners);
+    }
+
+    // kiválasztott futó sebessége
+    $scope.getRunnerSpeed = function(runner){
+        //kiválasztott futó keresése a teamMembers tömbben
+        let selectedRunner = $scope.teamMembers.find(member => {
+            return member.firstName + ' ' + member.lastName === runner;
+        });
+        //ha nem találunk értéket, vagy nincs megadva sebesség legyen null
+        if(!selectedRunner || !selectedRunner.speed){
+            return 0;
+        }
+        //szétválasztjuk az percet és a másodpercet
+        let [minutes, second] = selectedRunner.speed.split(':');
+        //átalakítjuk másodperccé
+        let totalSecond = parseInt(minutes) * 60 + parseInt(second);
+        //itt vissza kapjuk a futó sebességét másodpercben/km
+        return totalSecond;
+    }
+
+    //az 1km/speed szorzata a távval
+    $scope.calculateTime =function(distance,speed){
+        //ellenőrizzük érvényes e a két szám
+        if(isNaN(distance) || isNaN(speed) || speed <=0){
+            return '00:00:00'; //érvénytelen adatok kezelése
+        }
+        let timeInMinutes = (distance * speed) /60;
+        let hours = Math.floor(timeInMinutes/60); //óra számítása
+        let minutes = Math.floor(timeInMinutes % 60);
+        let seconds = Math.floor(timeInMinutes % 1) * 60; //másodperc
+
+        //idő formázása
+        let formattedTime = (hours < 10 ? '0' : '') + hours + ':' +
+                            (minutes < 10 ? '0' : '') + minutes + ':'+
+                            (seconds < 10 ? '0' : '') + seconds;
+        return formattedTime;
+    }
+    
+    //össze gyűjtjük a távokat
+    $scope.runnerDistance = {};
+    for (let i = 0; i < 10; i++) {
+        $scope.runnerDistance['runner' + 1] = 0;
+        //kezdetben minden táv 0
+    }
+
+
+    $scope.calculateTotalDistance = function(distance, runner){
+        console.log("futó neve: ", runner, "lefutott táv: " , distance);
+        //hiba kezelés
+        if(!runner){
+            return 0;
+        }
+        let totalDistance = 0;
+        $scope.stages.forEach(stage => {
+            if(stage.runner === runner){
+                totalDistance += stage.distance;
+                console.log(totalDistance);
+                $scope.runnerDistance[runner] = totalDistance;
+
+            }
+        })
+    }
+
+
+});
+
+    </script>
+</body>
+
+</html>
